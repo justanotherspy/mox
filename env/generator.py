@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import qrcode
 import requests
 import boto3
@@ -18,7 +16,7 @@ with open('creds.json') as creds_file:
 
 
 def main():
-
+    pass
     #id = str(uuid.uuid4())[:8]
 
     # name = input("Name of doll: ")
