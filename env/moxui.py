@@ -3,12 +3,25 @@ Author: Daniel Schwartz
 Date: April 2020
 '''
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QIcon
 import sys
+import uuid
+import urllib.parse 
+import qrcode
+import boto3
+import requests
+import json
 
+access_key = ""
+secret_key = ""
+api_key = ""
+with open('creds.json') as creds_file:
+    data = json.load(creds_file)
+    access_key = data['aws_access_key_id']
+    secret_key = data['aws_secret_access_key']
+    api_key = data['api_key']
 
 class MoxWindow(QMainWindow):
     '''
@@ -43,6 +56,7 @@ class MoxWindow(QMainWindow):
         self.generateButton.setText("Generate Code and Upload image")
         self.generateButton.setGeometry(QtCore.QRect(250, 340, 300, 60))
         self.generateButton.setObjectName("generateButton")
+        self.generateButton.setEnabled(False)
         self.generateButton.clicked.connect(self.generateButtonClicked)
         
         # Doll Name Text
@@ -133,6 +147,22 @@ class MoxWindow(QMainWindow):
         This is the generate button action. It is going to collate the required data and send it to the generator.
         '''
         print("generate")
+        id = str(uuid.uuid4())[:8]
+        encoded_name = urllib.parse.quote_plus(self.name)
+        encoded_description = urllib.parse.quote_plus(self.description)
+
+        try:
+            # update_database = requests.get("https://y5p8e6kmgf.execute-api.us-east-1.amazonaws.com/prod/generate?id=" + id + "&name=" + encoded_name + "&description=" + encoded_description)
+            img = qrcode.make('https://verify.moxandlouise.com/#'+id)
+            img.save("./qrcodes/" + self.name + '.png')
+            # bucketName = "verify.moxandlouise.com"
+            # s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+            # key = "./images/" + self.name + ".jpeg"
+            # output = "images/" + self.name + ".jpeg"
+            # s3.upload_file(key, bucketName, output, ExtraArgs={'ACL':'public-read'})
+        except Exception as e:
+            print(e)
+            #pop up an error screen and maybe write error out to file
 
     def updateName(self):
         self.name = self.dollNameLineEdit.text()
