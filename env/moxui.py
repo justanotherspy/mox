@@ -15,6 +15,12 @@ class MoxWindow(QMainWindow):
     This is the main window for the QR code generator application.
     It contains all the UI objects as well as the functions that control them.
     '''
+
+    fileName = ""
+    name = "" 
+    description = ""
+
+
     def __init__(self):
         super(MoxWindow, self).__init__()
         self.setupUi()
@@ -39,7 +45,7 @@ class MoxWindow(QMainWindow):
         self.generateButton.setObjectName("generateButton")
         self.generateButton.clicked.connect(self.generateButtonClicked)
         
-        # Doll Name Label
+        # Doll Name Text
         self.dollNameLineEdit = QtWidgets.QLineEdit(self)
         self.dollNameLineEdit.setGeometry(QtCore.QRect(250, 60, 300, 30))
         font = QtGui.QFont()
@@ -47,6 +53,7 @@ class MoxWindow(QMainWindow):
         self.dollNameLineEdit.setFont(font)
         self.dollNameLineEdit.setPlaceholderText("Name of Doll")
         self.dollNameLineEdit.setObjectName("dollNameLineEdit")
+        self.dollNameLineEdit.textChanged.connect(self.updateName)
         
         # File Dialog Button
         self.fileDialogButton = QtWidgets.QPushButton(self)
@@ -70,6 +77,7 @@ class MoxWindow(QMainWindow):
         self.dollDescription.setAcceptRichText(False)
         self.dollDescription.setPlaceholderText("Write a short description for the doll...")
         self.dollDescription.setObjectName("dollDescription")
+        self.dollDescription.textChanged.connect(self.updateDescription)
         
         # Start New Button
         self.startNewButton = QtWidgets.QPushButton(self)
@@ -116,7 +124,9 @@ class MoxWindow(QMainWindow):
         self.imageNameLabel.adjustSize()
         self.fileName = ""
         self.dollDescription.setText("")
+        self.description = ""
         self.dollNameLineEdit.setText("")
+        self.name = ""
 
     def generateButtonClicked(self):
         '''
@@ -124,6 +134,21 @@ class MoxWindow(QMainWindow):
         '''
         print("generate")
 
+    def updateName(self):
+        self.name = self.dollNameLineEdit.text()
+        self.updateGenerateButton()
+        # print(self.name)
+
+    def updateDescription(self):
+        self.description = self.dollDescription.toPlainText()
+        self.updateGenerateButton()
+        # print(self.description)
+
+    def updateGenerateButton(self):
+        if self.fileName and self.name and self.description:
+            self.generateButton.setEnabled(True)
+        else:
+            self.generateButton.setEnabled(False)
 
     def fileDialogButtonClicked(self):
         '''
@@ -136,6 +161,7 @@ class MoxWindow(QMainWindow):
             print(self.fileName)
             self.imageNameLabel.setText(self.fileName)
             self.imageNameLabel.adjustSize()
+            self.updateGenerateButton()
 
 
 
