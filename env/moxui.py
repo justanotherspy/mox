@@ -5,7 +5,8 @@ Date: April 2020
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtGui import QIcon
 import sys
 
 
@@ -112,6 +113,8 @@ class MoxWindow(QMainWindow):
         '''
         print("new")
         self.imageNameLabel.setText("...")
+        self.imageNameLabel.adjustSize()
+        self.fileName = ""
         self.dollDescription.setText("")
         self.dollNameLineEdit.setText("")
 
@@ -127,6 +130,13 @@ class MoxWindow(QMainWindow):
         This is the file dialog button action. It is going to open a file picker where the user chooses the image to upload.
         '''
         print("file open")
+        options = QFileDialog.Options()
+        self.fileName, _ = QFileDialog.getOpenFileName(self,"Choose your image", "","Image Files (*.jpeg *.jpg)", options=options)
+        if self.fileName:
+            print(self.fileName)
+            self.imageNameLabel.setText(self.fileName)
+            self.imageNameLabel.adjustSize()
+
 
 
 
