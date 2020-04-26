@@ -33,7 +33,6 @@ class MoxWindow(QMainWindow):
     name = "" 
     description = ""
 
-
     def __init__(self):
         super(MoxWindow, self).__init__()
         self.setupUi()
@@ -121,7 +120,6 @@ class MoxWindow(QMainWindow):
         
         QtCore.QMetaObject.connectSlotsByName(self)
 
-
     def closeButtonClicked(self):
         '''
         This is the close button action. It simply closes the application.
@@ -192,8 +190,6 @@ class MoxWindow(QMainWindow):
             self.imageNameLabel.setText(self.fileName)
             self.imageNameLabel.adjustSize()
             self.updateGenerateButton()
-
-
 
 
 
