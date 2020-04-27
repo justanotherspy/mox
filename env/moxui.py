@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QIcon
 import sys
 import uuid
-import urllib.parse 
 import qrcode
 import boto3
 import requests
@@ -16,12 +15,10 @@ import json
 
 access_key = ""
 secret_key = ""
-api_key = ""
 with open('creds.json') as creds_file:
     data = json.load(creds_file)
     access_key = data['aws_access_key_id']
     secret_key = data['aws_secret_access_key']
-    api_key = data['api_key']
 
 class MoxWindow(QMainWindow):
     '''
@@ -139,25 +136,44 @@ class MoxWindow(QMainWindow):
         self.description = ""
         self.dollNameLineEdit.setText("")
         self.name = ""
+        self.progressBar.setValue(0)
 
     def generateButtonClicked(self):
         '''
-        This is the generate button action. It is going to collate the required data and send it to the generator.
+        This is the generate button action. It is going to collate the required data, update the database, generate the qr code and save it, then upload the file.
         '''
-        print("generate")
-        id = str(uuid.uuid4())[:8]
-        encoded_name = urllib.parse.quote_plus(self.name)
-        encoded_description = urllib.parse.quote_plus(self.description)
-
+        print("generation start")
+        self.progressBar.setValue(20)
+        
         try:
-            # update_database = requests.get("https://y5p8e6kmgf.execute-api.us-east-1.amazonaws.com/prod/generate?id=" + id + "&name=" + encoded_name + "&description=" + encoded_description)
-            img = qrcode.make('https://verify.moxandlouise.com/#'+id)
-            img.save("./qrcodes/" + self.name + '.png')
-            # bucketName = "verify.moxandlouise.com"
-            # s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-            # key = "./images/" + self.name + ".jpeg"
-            # output = "images/" + self.name + ".jpeg"
-            # s3.upload_file(key, bucketName, output, ExtraArgs={'ACL':'public-read'})
+            id = str(uuid.uuid4())[:8]
+            url = "https://x7444u6kd1.execute-api.us-east-1.amazonaws.com"
+
+            payload = '{"name": "'+self.name+'","description": "'+self.description+'", "id": "'+id+'"}'
+
+            headers = {
+                'dry-run': 'false',
+                'Content-Type': 'application/json'
+            }
+            response = requests.request("POST", url, headers=headers, data= payload)
+            self.progressBar.setValue(30)
+            if response.text != 'done':
+                #Error catch
+                #TODO make a popup showup when there is an error
+                #TODO print the error to error.log file
+                print(response.text)
+            else:
+                self.progressBar.setValue(50)
+                #TODO Start rebuilding the website to test new codes with
+                qr_image = qrcode.make('https://verify.moxandlouise.com/#'+id)
+                qr_image.save("./qrcodes/" + self.name + '.png')
+            
+                # bucketName = "verify.moxandlouise.com"
+                # s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+                # key = "./images/" + self.name + ".jpeg"
+                # output = "images/" + self.name + ".jpeg"
+                # s3.upload_file(key, bucketName, output, ExtraArgs={'ACL':'public-read'})
+
         except Exception as e:
             print(e)
             #pop up an error screen and maybe write error out to file
