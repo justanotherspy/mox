@@ -22,8 +22,6 @@ import DollCard from './components/DollCard.vue'
 import HeadCard from './components/HeadCard.vue'
 import FooterCard from './components/FooterCard.vue'
 // Import axios here
-
-// The app needs to contain the three components header, doll, and footer
 // Once the app loads we want to fetch the data for the doll component
 // Data will be shared with all components via this component
 export default {
@@ -55,8 +53,9 @@ export default {
 <style>
 
 /* We need a custom font that will be filled out here */
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Nunito', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
