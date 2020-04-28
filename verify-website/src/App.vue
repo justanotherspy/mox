@@ -1,22 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- This is where the three cards are placed, each is a component -->
+    <!-- Put up a loading screen first -->
+    <!-- check if verified -->
+    <!-- show the verified card with animation if verified-->
+    <!-- show the doll card with loaded image and description -->
+    <!-- show the footer card with links and logo and details -->
+    <!-- if not verified dont show doll card -->
+    <div @click="fetchData()">
+      <head-card :verified="verified"></head-card>
+    </div>
+    <div v-if="verified">
+      <doll-card :name="name" :description="description" :scannedDate="scannedDate"></doll-card>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import DollCard from './components/DollCard.vue'
+import HeadCard from './components/HeadCard.vue'
+// Import axios here
 
+// The app needs to contain the three components header, doll, and footer
+// Once the app loads we want to fetch the data for the doll component
+// Data will be shared with all components via this component
 export default {
   name: 'App',
+  data () {
+    return {
+      name: '',
+      verified: false,
+      description: '',
+      scannedDate: ''
+    }
+  },
   components: {
-    HelloWorld
+    DollCard,
+    HeadCard
+  },
+  methods: {
+    fetchData () {
+      this.verified = true
+      this.name = 'Daniel'
+      this.description = 'This is a description'
+      this.scannedDate = '4/20/20'
+    }
   }
 }
 </script>
 
 <style>
+
+/* We need a custom font that will be filled out here */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

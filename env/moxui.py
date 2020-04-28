@@ -167,7 +167,9 @@ class MoxWindow(QMainWindow):
                 #TODO Start rebuilding the website to test new codes with
                 qr_image = qrcode.make('https://verify.moxandlouise.com/#'+id)
                 qr_image.save("./qrcodes/" + self.name + '.png')
-            
+
+                # TODO grab the file and upload to s3, we need the name of the file to be the same as the doll name so we can fetch in the website easily.
+                
                 # bucketName = "verify.moxandlouise.com"
                 # s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
                 # key = "./images/" + self.name + ".jpeg"
