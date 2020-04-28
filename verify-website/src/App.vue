@@ -13,12 +13,14 @@
     <div v-if="verified">
       <doll-card :name="name" :description="description" :scannedDate="scannedDate"></doll-card>
     </div>
+    <footer-card></footer-card>
   </div>
 </template>
 
 <script>
 import DollCard from './components/DollCard.vue'
 import HeadCard from './components/HeadCard.vue'
+import FooterCard from './components/FooterCard.vue'
 // Import axios here
 
 // The app needs to contain the three components header, doll, and footer
@@ -36,7 +38,8 @@ export default {
   },
   components: {
     DollCard,
-    HeadCard
+    HeadCard,
+    FooterCard
   },
   methods: {
     fetchData () {
